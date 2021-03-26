@@ -20,8 +20,17 @@ export default {
     };
   },
   methods: {
-    save() {
-      // this.$http.post()
+    async save() {
+      //async await将类似同步的写法写成异步
+      const res = await this.$http.post("categories", this.model);
+      console.log(res);
+      //跳转到分类页面
+      this.$router.push("/categories/list");
+      //提示保存成功
+      this.$message({
+        type: "success",
+        message: "保存成功",
+      });
     },
   },
 };

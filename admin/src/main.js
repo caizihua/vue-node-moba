@@ -4,6 +4,7 @@ import "./plugins/element.js";
 import router from "./router";
 import http from "./http";
 Vue.config.productionTip = false;
+//获得http
 Vue.prototype.$http = http;
 new Vue({
   router,

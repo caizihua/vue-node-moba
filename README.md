@@ -2,39 +2,22 @@
 
 > 一个Vue-Node-Element的练手项目
 
+主要的三个文件夹分别是web，serve，admin
 
+👋serve为服务端界面🤚admin为管理端界面🖐web为主页相关界面
 
-三个文件夹分别是web，serve，admin
-
-- 👋serve为服务端界面 
-
-- ```bash
-  vue create serve
-  ```
-
-- 🤚admin为管理端界面
-
-  ```bash
-  vue create admin
-  ```
-
-- 🖐web为主页相关界面
-
-  安装npm依赖
-
-  ```bash
-  npm init -y
-  ```
-
-  在package.js中添加脚本
-
-  ```json
-  {
-      "scripts": {
-      "serve":"nodemon index.js"
-    },
-  }
-  ```
+```bash
+vue create serve
+vue create admin
+//安装npm依赖
+npm init -y
+//在package.js中添加脚本
+{
+    "scripts": {
+    "serve":"nodemon index.js"
+  },
+}
+```
 
 ## 基础界面
 
@@ -47,9 +30,9 @@ vue add element
 vue add router
 ```
 
-在element-ui官网的全局组件中复制组件代码到这个项目
+在element-ui官网的全局组件中复制组件代码到这个项目。
 
-在`views`目录下添加`Main.vue`文件存放组件代码
+在`views`目录下添加`Main.vue`文件存放组件代码。
 
 ```vue
 <template>
@@ -60,7 +43,7 @@ vue add router
 //这里的style中的height修改为100vh，表示的是屏幕的高度
 ```
 
-在`router`路由目录下的`index.js`中导入组件并使用
+在`router`路由目录下的`index.js`中导入组件并使用。
 
 ```js
 import Main from "../views/Main.vue";
@@ -74,7 +57,7 @@ const routes = [
 ];
 ```
 
-## element-ui
+### element-ui
 
 ```vue
     <el-form label-width="80px" @submit.native.prevent="save">
@@ -87,19 +70,19 @@ const routes = [
     </el-form>
 ```
 
-`@submit.native.prevent`表示使用原生的提交事件并且阻止页面跳转，save是一个方法
+`@submit.native.prevent`表示使用原生的提交事件并且阻止页面跳转，save是一个方法。
 
 `native-type`表示使用原生属性。
 
-### axios
+## axios
 
-使用save方法保存数据还有接口请求就需要`axios`
+使用save方法保存数据还有接口请求就需要`axios`。
 
 ```bash
 npm i axios
 ```
 
-新建`http.js`处理接口请求
+新建`http.js`处理接口请求。
 
 ```js
 import axios from "axios";
@@ -114,5 +97,37 @@ export default http;
 ```js
 import http from "./http"; 
 Vue.prototype.$http = http;
+```
+
+## server
+
+需要安装`express@next`表示下一个版本，`mongoose`数据库，`cors`允许跨域请求。
+
+```bash
+npm i express@next mongoose cors --save
+```
+
+可以将router等路由文件存储在当前文件夹routes中，这个文件夹专门存储路由相关代码。
+
+```js
+//router/admin/index.js
+//关于admin端的路由
+module.exports = (app) => {
+  const express = require("express");
+  //定义express的子路由
+  //这个子路由里面有我们封装的函数
+  //因为需要将子路由挂载出去
+  const router = express.Router();
+  app.use("/admin/api", router);
+};
+```
+
+**admin**这里是导出了一个函数，这个函数接受一个参数app对象。
+
+**主文件**中`require`了admin，因为导出的是函数，所以可以传参，又因为引用了app，所以可以将app作为参数传给admin中的文件。
+
+```js
+//server/index.js
+require("./routes/admin")(app);
 ```
 

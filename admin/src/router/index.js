@@ -8,7 +8,6 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Main",
     component: Main,
     children: [
       {
@@ -16,18 +15,14 @@ const routes = [
         component: CategoryEdit,
       },
       {
+        //不同的地址使用相同的组件，传入id，props为true表示将数据传入组件中
+        path: "/categories/edit/:id",
+        component: CategoryEdit,
+        props: true,
+      },
+      {
         path: "/categories/list",
         component: CategoryList,
-      },
-      {
-        path: "/categories/categories/list",
-        redirect: "/categories/list",
-        component: CategoryList,
-      },
-      {
-        path: "/categories/categories/create",
-        redirect: "/categories/create",
-        component: CategoryEdit,
       },
     ],
   },

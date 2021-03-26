@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>新建分类</h1>
+    <h1>新建分类 {{ id }}</h1>
     <el-form label-width="80px" @submit.native.prevent="save">
       <el-form-item label="名称">
         <el-input v-model="model.name"></el-input>
@@ -14,6 +14,9 @@
 
 <script>
 export default {
+  props: {
+    id: {},
+  },
   data() {
     return {
       model: {},

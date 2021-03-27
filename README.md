@@ -320,3 +320,83 @@ module.exports = (app) => {
 ```
 
 通过`/admin/api`端口，进行各种网络请求。相当于api接口。
+
+## 新建与编辑操作整合
+
+通过组件复用，可以通过CtategoryEdit组件进行新建分类操作和编辑分类操作。
+
+不同的地址使用相同的组件，id表示数据的标识，props为true表示将数据传入组件中。
+
+```js
+const routes = [
+  {
+    path: "/",
+    component: Main,
+    children: [
+      {
+        path: "/categories/create",
+        component: CategoryEdit,
+      },
+      {
+        path: "/categories/edit/:id",
+        component: CategoryEdit,
+        props: true,
+      }, 
+    ],
+  },
+];
+
+```
+
+通过是否传入id可以选择显示编辑还是新建分类。
+
+```html
+<h1>{{ id ? "编辑" : "新建" }}分类</h1>
+```
+
+```js
+export default {
+  //这样就能直接使用id，不用再写复杂的参数 【
+  props: {
+    id: {},
+  },
+  data() {
+    return {
+      model: {},
+    };
+  },
+  methods: {
+    async save() {
+      //对于新建和编辑，保存的方法不一样，一个是post，一个是put
+      //async await将类似同步的写法写成异步
+      let res;
+      if (this.id) {
+        res = await this.$http.put(`categories/${this.id}`, this.model);
+      } else {
+        res = await this.$http.post("categories", this.model);
+      }
+
+      console.log(res);
+      //跳转到分类页面
+      this.$router.push("/categories/list");
+      //提示保存成功
+      this.$message({
+        type: "success",
+        message: "保存成功",
+      });
+    },
+    //获取分类的详情
+    async fetch() {
+      const res = await this.$http.get(`categories/${this.id}`);
+      this.model = res.data;
+    },
+  },
+  created() {
+    //前面的条件满足才执行后面的函数
+    this.id && this.fetch();
+  },
+};
+```
+
+
+

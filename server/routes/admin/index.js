@@ -14,12 +14,30 @@ module.exports = (app) => {
     const model = await Category.create(req.body);
     res.send(model);
   });
-
+  //编辑分类编辑后更新的接口
+  router.put("/categories/:id", async (req, res) => {
+    const model = await Category.findByIdAndUpdate(req.params.id, req.body);
+    res.send(model);
+  });
+  //删除分类名的接口
+  router.delete("/categories/:id", async (req, res) => {
+    await Category.findByIdAndDelete(req.params.id, req.body);
+    res.send({
+      success: true,
+    });
+  });
   //分类列表的接口
   router.get("/categories", async (req, res) => {
     const items = await Category.find().limit(10);
     //将查找到的数据传给items发给前端
     res.send(items);
+  });
+
+  //分类详情的接口
+  router.get("/categories/:id", async (req, res) => {
+    const model = await Category.findById(req.params.id);
+    //将查找到的数据传给items发给前端
+    res.send(model);
   });
   app.use("/admin/api", router);
 };

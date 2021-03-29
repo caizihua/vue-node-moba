@@ -7,7 +7,7 @@ const schema = new mongoose.Schema({
   name: { type: String },
   //不是String类型，而是mongodb的objectId类型
   //ref关联的模型就是Category
-  paren: { type: mongoose.SchemaTypes.ObjectId, ref: "Category" },
+  parent: { type: mongoose.SchemaTypes.ObjectId, ref: "Category" },
 });
 //生成并导出模型
 module.exports = mongoose.model("Category", schema);

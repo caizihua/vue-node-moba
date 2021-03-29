@@ -49,14 +49,14 @@ export default {
       //async await将类似同步的写法写成异步
       // let res;
       if (this.id) {
-        await this.$http.put(`categories/${this.id}`, this.model);
+        await this.$http.put(`rest/categories/${this.id}`, this.model);
         this.$router.push("/categories/list");
       } else {
         if (this.model.name == "") {
           this.$message({ message: "请输入名称", type: "warning" });
           return false;
         } else {
-          await this.$http.post("categories", this.model);
+          await this.$http.post("rest/categories", this.model);
           this.$router.push("/categories/list");
         }
       }
@@ -70,12 +70,12 @@ export default {
     },
     //获取分类的详情
     async fetch() {
-      const res = await this.$http.get(`categories/${this.id}`);
+      const res = await this.$http.get(`rest/categories/${this.id}`);
       this.model = res.data;
     },
     //获取分类名称，接口就是categories
     async fetchParents() {
-      const res = await this.$http.get(`categories`);
+      const res = await this.$http.get(`rest/categories`);
       this.parents = res.data;
     },
   },

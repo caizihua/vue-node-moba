@@ -5,6 +5,7 @@
     <el-form label-width="80px">
       <!-- @submit.native.prevent="save" -->
       <el-form-item label="上级分类">
+        <!-- model中存入或取出parent -->
         <el-select v-model="model.parent">
           <!-- 展示的是名称，真正存的value是id -->
           <el-option
@@ -73,7 +74,7 @@ export default {
       const res = await this.$http.get(`rest/categories/${this.id}`);
       this.model = res.data;
     },
-    //获取分类名称，接口就是categories
+    //获取父级选项分类名称，接口就是categories
     async fetchParents() {
       const res = await this.$http.get(`rest/categories`);
       this.parents = res.data;

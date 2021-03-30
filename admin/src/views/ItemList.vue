@@ -5,6 +5,11 @@
     <el-table :data="items">
       <el-table-column prop="_id" label="ID" width="300"> </el-table-column>
       <el-table-column prop="name" label="物品名称"> </el-table-column>
+      <el-table-column prop="icon" label="物品图标">
+        <template slot-scope="scope">
+          <img :src="scope.row.icon" style="height: 2.5rem" />
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="190">
         <template slot-scope="scope">
           <!-- scope.row表示当前这一行的数据 -->

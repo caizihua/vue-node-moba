@@ -5,8 +5,9 @@ const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
   //现在数据库中只包含了名字
   name: { type: String },
-  //不是String类型，而是mongodb的objectId类型
+  //存入的不是String类型，而是mongodb的objectId类型
   //ref关联的模型就是Category
+  //通过关联模型parent就能通过这个模型找到这个模型当中某个数据的ObjectId
   parent: { type: mongoose.SchemaTypes.ObjectId, ref: "Category" },
 });
 //生成并导出模型

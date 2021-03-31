@@ -229,3 +229,65 @@ export default {
 };
 ```
 
+## 图片上传
+
+`el-upload`是elementUI自带的上传组件，接受的参数：
+
+- `:action`动态地接受地址，上传数据到该接口。接受的是完整路径，这里的`$http.defaults.baseURL`是axios之前配置的baseURL，存放在http.defaults中，再加上指定的端口
+- `on-success`表示成功后调用的函数，函数中返回的参数中找到地址赋给model.icon展示出图标。
+- `:src="model.icon"`如果有图片地址就显示图片，`v-if="model.icon"`没有就显示上传图标。
+
+```vue
+<el-form-item label="图标">
+        <el-upload
+          class="avatar-uploader"
+          :action="$http.defaults.baseURL + '/upload'"
+          :show-file-list="false"
+          :on-success="afterUpload"
+        >
+          <img v-if="model.icon" :src="model.icon" class="avatar" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </el-form-item>
+```
+
+1. `this.model.icon = res.url;`
+
+   后端传来的对象res中包括了展示图片的地址。
+
+   这里应注意，如果data的model里面没有`定义`icon，这样赋值将不会有效果。
+
+   因为可能是响应式问题，没有定义icon就对icon赋值是没有意义的，当然也不会显示的。
+
+   可以显式地使用$set为对象添加不存在的属性。
+
+   或者可以在data数据里面定义icon。
+
+2. `this.$set(this.model, "icon", res.url);`
+
+   使用$set时也应注意，如果对象已经添加了icon属性，这样添加也不会响应，应该是添加没有的属性。
+
+```js
+export default {
+  props: {
+    id: {},
+  },
+  data() {
+    return {
+      model: {
+        name: "",
+        //icon:"",
+      },
+    };
+  },
+  methods: {
+    afterUpload(res) {
+      this.$set(this.model, "icon", res.url);
+    },
+  },
+  created() {
+    this.id && this.fetch();
+  },
+};
+```
+

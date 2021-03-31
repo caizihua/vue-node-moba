@@ -6,6 +6,12 @@ import CategoryList from "../views/CategoryList.vue";
 
 import ItemEdit from "../views/ItemEdit.vue";
 import ItemList from "../views/ItemList.vue";
+
+import HeroEdit from "../views/HeroEdit.vue";
+import HeroList from "../views/HeroList.vue";
+
+import ArticleEdit from "../views/ArticleEdit.vue";
+import ArticleList from "../views/ArticleList.vue";
 Vue.use(VueRouter);
 const routes = [
   {
@@ -26,12 +32,12 @@ const routes = [
         path: "/categories/list",
         component: CategoryList,
       },
+
       {
         path: "/items/create",
         component: ItemEdit,
       },
       {
-        //不同的地址使用相同的组件，传入id，props为true表示将数据传入组件中
         path: "/items/edit/:id",
         component: ItemEdit,
         props: true,
@@ -39,6 +45,34 @@ const routes = [
       {
         path: "/items/list",
         component: ItemList,
+      },
+
+      {
+        path: "/heroes/create",
+        component: HeroEdit,
+      },
+      {
+        path: "/heroes/edit/:id",
+        component: HeroEdit,
+        props: true,
+      },
+      {
+        path: "/heroes/list",
+        component: HeroList,
+      },
+
+      {
+        path: "/articles/create",
+        component: ArticleEdit,
+      },
+      {
+        path: "/articles/edit/:id",
+        component: ArticleEdit,
+        props: true,
+      },
+      {
+        path: "/articles/list",
+        component: ArticleList,
       },
     ],
   },

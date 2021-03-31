@@ -166,3 +166,98 @@ populate表示关联取出什么东西，如果传入的字段是关联字段就
   });
 ```
 
+## 图片上传
+
+- 如果需要图片上传，可以使用multer模块，这个模块是用于处理`form-data`或者`multipart`
+
+  multer会添加file对象到req中，req中包含表单上传的文件信息。
+
+  表单中可以设置dest属性，表示存储在哪里。
+
+  `single`接受单个文件的上传名字为file，因为接口formData中的名字就是file。
+
+- 将file对象取出，设置访问路径`file.url`。
+
+  file对象中有filename就是图片的二进制名称。
+
+  将file再发出。
+
+```js
+//关于admin端的路由
+module.exports = (app) => {
+  const multer = require("multer");
+  const upload = multer({ dest: __dirname + "/../../uploads" });
+  app.post("/admin/api/upload", upload.single("file"), async (req, res) => {
+    const file = req.file;
+    //添加访问路径，具体的就是file里面的filename，是二进制数据
+    file.url = `http://localhost:3000/uploads/${file.filename}`;
+    res.send(file);
+  });
+};
+```
+
+## 英雄编辑
+
+英雄的类型应该是可选的，而不是输入的，并且保存的也应该是类型的`_id`。
+
+而且这个分类，某些英雄职业可能不止一个，所以还需要多选。可以使用数组来保存多个值。
+
+```js
+//server/models/Hero.js
+const mongoose = require("mongoose");
+
+const schema = new mongoose.Schema({
+  name: { type: String },
+  avatar: { type: String },
+  title: { type: String },
+  // 这里的关联模型就是Category，因为需要在分类模型中选择职业的类型
+  //这里使用数组表示可以关联多个
+  category: [{ type: mongoose.SchemaTypes.ObjectId, ref: "Category" }],
+  //定义了复合类型，更像是对象的属性
+  //评分
+  scores: {
+    difficult: { type: Number },
+    skills: { type: Number },
+    attack: { type: Number },
+    survive: { type: Number },
+  },
+  //技能
+  skills: [
+    {
+      icon: { type: String },
+      name: { type: String },
+      description: { type: String },
+      tips: { type: String },
+    },
+  ],
+  //顺风逆风出装
+  items1: [{ type: mongoose.SchemaTypes.ObjectId, ref: "Item" }],
+  items2: [{ type: mongoose.SchemaTypes.ObjectId, ref: "Item" }],
+  //使用技巧
+  usageTips: { type: String },
+  //对战技巧
+  battleTips: { type: String },
+  //团队技巧
+  teamTips: { type: String },
+  //英雄关系 搭档
+  partners: [
+    {
+      hero: { type: mongoose.SchemaTypes.ObjectId, ref: "Hero" },
+      description: { type: String },
+    },
+  ],
+});
+module.exports = mongoose.model("Hero", schema);
+```
+
+### 添加类型，称号，难度，顺风逆风出装
+
+### 编辑英雄技能
+
+### 英雄技能删除 
+
+### 创建文章和编辑文章
+
+### 富文本编辑器`vue2-editor`
+
+### 富文本中图片上传

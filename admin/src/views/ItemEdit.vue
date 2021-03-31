@@ -41,14 +41,14 @@
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
+  width: 89px;
+  height: 89px;
+  line-height: 89px;
   text-align: center;
 }
 .avatar {
-  width: 178px;
-  height: 178px;
+  width: 89px;
+  height: 89px;
   display: block;
 }
 </style>

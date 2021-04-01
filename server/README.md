@@ -256,8 +256,10 @@ module.exports = mongoose.model("Hero", schema);
 
 ### 英雄技能删除 
 
-### 创建文章和编辑文章
+## 创建文章和编辑文章
 
 ### 富文本编辑器`vue2-editor`
 
 ### 富文本中图片上传
+
+## 广告管理

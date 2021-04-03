@@ -263,3 +263,5 @@ module.exports = mongoose.model("Hero", schema);
 ### 富文本中图片上传
 
 ## 广告管理
+
+## 管理员账号管理（bcrypt）

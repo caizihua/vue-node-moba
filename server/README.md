@@ -250,11 +250,9 @@ const schema = new mongoose.Schema({
 module.exports = mongoose.model("Hero", schema);
 ```
 
-### 添加类型，称号，难度，顺风逆风出装
-
 ### 编辑英雄技能
 
-### 英雄技能删除 
+### 英雄技能删除
 
 ## 创建文章和编辑文章
 
@@ -265,3 +263,11 @@ module.exports = mongoose.model("Hero", schema);
 ## 广告管理
 
 ## 管理员账号管理（bcrypt）
+
+## 登录页面
+
+## 登录接口
+
+## 服务器登录校验（jwt）
+
+## 服务器登录校验（assert）

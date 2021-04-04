@@ -3,7 +3,7 @@
     <h1>{{ id ? "编辑" : "新建" }}英雄</h1>
     <el-form label-width="80px" type="border-card">
       <!-- 当value取某个值时，就会默认跳转到el-tab-pane中相应的name属性值的表格 -->
-      <el-tabs value="skills">
+      <el-tabs value="basic">
         <el-tab-pane label="基础信息" name="basic">
           <el-form-item label="名称">
             <el-input v-model="model.name"></el-input>
@@ -45,7 +45,6 @@
               style="margin-top: 0.7rem"
             ></el-rate>
           </el-form-item>
-
           <el-form-item label="技能">
             <el-rate
               v-model="model.scores.skills"
@@ -192,7 +191,7 @@ export default {
     },
     async fetch() {
       const res = await this.$http.get(`rest/heroes/${this.id}`);
-      //这里的数据中，直接赋值是替换了原来的model，而且我们在model中定义了scores也会被覆盖
+      //直接赋值是替换了原来的model，而且我们在原来的model中定义了scores分数等级会被覆盖
       //需要使用assign方法将res.data中的数据赋给model，而不是直接替换
       //this.model = res.data
       this.model = Object.assign({}, this.model, res.data);

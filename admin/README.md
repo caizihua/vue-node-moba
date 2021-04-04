@@ -291,3 +291,145 @@ export default {
 };
 ```
 
+## 英雄编辑
+
+### 添加类型，难度，顺风逆风出装
+
+- 类型
+
+  英雄页面中，类型应该是可多选的，不止有一个职业。
+
+  > multiple表示可以多选，这是elementUI中的定义的。
+
+  ```vue
+  <el-form-item label="类型">
+    <!-- 添加multiple字段就能进行多选 -->
+    <el-select v-model="model.categories" multiple>
+      <el-option
+        v-for="item of categories"
+        :key="item.id"
+        :value="item._id"
+        :label="item.name"
+      ></el-option>
+    </el-select>
+  </el-form-item>
+  ```
+
+- 难度
+
+  难度可以使用elementUI中的el-rate展示。
+
+  ```vue
+  <el-form-item label="难度">
+    <el-rate
+      v-model="model.scores.difficult"
+      :max="9"
+      show-score
+      style="margin-top: 0.7rem"
+    ></el-rate>
+  </el-form-item>
+  <el-form-item label="技能">
+    <el-rate
+      v-model="model.scores.skills"
+      :max="9"
+      show-score
+      style="margin-top: 0.7rem"
+    ></el-rate>
+  </el-form-item>
+  <el-form-item label="攻击">
+    <el-rate
+      v-model="model.scores.attack"
+      :max="9"
+      show-score
+      style="margin-top: 0.7rem"
+    ></el-rate>
+  </el-form-item>
+  <el-form-item label="生存">
+    <el-rate
+      v-model="model.scores.survive"
+      :max="9"
+      show-score
+      style="margin-top: 0.7rem"
+    ></el-rate>
+  </el-form-item>
+  ```
+
+- 顺风逆风出装
+
+  出装需要多选，而且数据要从服务器中取出。前面英雄类型也是需要从服务器中取出的。
+
+  ```js
+  async fetchCategories() {
+        const res = await this.$http.get(`rest/categories`);
+        this.categories = res.data;
+      },
+      async fetchItems() {
+        const res = await this.$http.get(`rest/items`);
+        this.items = res.data;
+      },
+  ```
+
+  并且要在创建实例时就要运行。
+
+  ```js
+  created() {
+      this.fetchItems();
+      this.fetchCategories();
+  },
+  ```
+
+## 编辑英雄技能
+
+el-tabs表示选项卡，默认选中第一个标签页，可以通过 `value` 属性来指定当前选中的标签页。
+
+通过按钮来点击，每点击一次新增一项英雄技能可以编辑名称，技能图标等。
+
+
+
+```vue
+<el-tabs value="basic">
+  <el-tab-pane label="基础信息" name="basic">
+  //...
+  </el-tab-pane>
+  <el-tab-pane label="技能" name="skills">
+    <!-- 添加新技能，给skills push一个新对象 -->
+    <el-button @click="model.skills.push({})" style="margin-bottom: 1rem">
+      <i class="el-icon-plus"></i>添加技能
+    </el-button>
+    <el-row type="flex" style="flex-wrap: wrap">
+      <el-col :md="12" v-for="(item, i) in model.skills" :key="i">
+        <el-form-item label="名称">
+          <el-input v-model="item.name"></el-input>
+        </el-form-item>
+        <el-form-item label="图标">
+          <el-upload
+            class="avatar-uploader"
+            :action="$http.defaults.baseURL + '/upload'"
+            :show-file-list="false"
+            :on-success="(res) => $set(item, 'icon', res.url)"
+          >
+            <!-- 如果有图片地址就显示图片，没有就显示上传图标 -->
+            <img v-if="item.icon" :src="item.icon" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input type="textarea" v-model="item.description"></el-input>
+        </el-form-item>
+        <el-form-item label="小提示">
+          <el-input type="textarea" v-model="item.tips"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            size="small"
+            type="danger"
+            @click="model.skills.splice(i, 1)"
+            >删除</el-button
+          >
+        </el-form-item>
+      </el-col>
+    </el-row>
+  </el-tab-pane>
+</el-tabs>
+```
+

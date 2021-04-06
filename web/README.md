@@ -1,5 +1,32 @@
 # 移动端网站
 
+```shell
+D:.
+│  .gitignore
+│  babel.config.js
+│  data.txt
+│  package-lock.json
+│  package.json
+│  README.md
+├─public
+│      favicon.ico
+│      index.html
+└─src
+    │  App.vue
+    │  main.js
+    │  style.scss
+    ├─components
+    │      HelloWorld.vue
+    ├─router
+    │      index.js
+    └─views
+            About.vue
+            Home.vue
+            Main.vue
+```
+
+
+
 ## 1. 初始化
 
 ### "工具样式"和SCSS
@@ -134,6 +161,12 @@ $spacing-sizes: ( 0: 0, 1: 0.25, 2: 0.5, 3: 1, 4: 1.5, 5: 3, );
 ```
 
 ## 6. 首页顶部轮播图片(vue swiper)
+
+主界面中像导航栏等有些模块是不变的，改变的是内容，所以需要添加子路由。
+
+```shell
+vue add router
+```
 
 
 

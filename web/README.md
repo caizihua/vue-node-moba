@@ -35,6 +35,10 @@ D:.
 
 使用scss进行css代码的编写。
 
+```shell
+npm i -D sass@1.23.0 sass-loader@8.0.0
+```
+
 ### 样式重置
 
 在不同浏览器中样式是不一样的，所以需要统一重置一下样式。
@@ -160,7 +164,7 @@ $spacing-sizes: ( 0: 0, 1: 0.25, 2: 0.5, 3: 1, 4: 1.5, 5: 3, );
 
 ```
 
-## 6. 首页顶部轮播图片(vue swiper)
+## 首页
 
 主界面中像导航栏等有些模块是不变的，改变的是内容，所以需要添加子路由。
 
@@ -168,20 +172,64 @@ $spacing-sizes: ( 0: 0, 1: 0.25, 2: 0.5, 3: 1, 4: 1.5, 5: 3, );
 vue add router
 ```
 
+### 导航菜单
 
+布局使用flex布局， 中间使用`flex-1`后即`flex:1`，这样这一项就撑大整行。
 
-## 7. 使用字体图标(iconfont)
+```html
+		<div class="topbar bg-dark-1 py-2 px-4 d-flex ai-center">
+      <img src="../assets/logo.png" height="30" />
+      <div class="px-2 flex-1">
+        <div class="text-white">王者荣耀</div>
+        <div class="text-grey-1 fs-xxs">团队成就更多</div>
+      </div>
+      <button href="" class="btn bg-primary" type="button">立即下载</button>
+    </div>
+```
 
-## 8. 使用精灵图片(sprite)
+导航条中有不同的内容，点击后进行子路由的切换。
 
-## 9. 卡片组件(card)
+- `tag`表示将`router-link`换成其他标签。
+- `jc-round`，表示使用`justify-content:space-around`。
 
-## 10. 列表卡片组件(list-card, nav, swiper)
+```vue
+		<div class="bg-primary pt-3 pb-2">
+      <div class="nav d-flex text-white jc-around">
+        <div class="nav-item active">
+          <router-link class="nav-link" to="/" tag="div">首页</router-link>
+        </div>
+        <div class="nav-item">
+          <router-link class="nav-link" to="/" tag="div">攻略中心</router-link>
+        </div>
+        <div class="nav-item">
+          <router-link class="nav-link" to="/" tag="div">赛事中心</router-link>
+        </div>
+      </div>
+    </div>
+```
 
-## 11. 首页新闻资讯
+### 顶部轮播图片(vue swiper)
 
-## 12. 首页英雄列表
+使用`vue swiper`进行轮播图播放。
 
-## 13. 新闻详情页
+安装`npm install swiper vue-awesome-swiper`。
 
-## 14. 英雄详情页
+## 使用精灵图片(sprite)
+
+将许多小的图片放在一起，这样只用下载一次，请求一次接口即可。
+
+通过背景定位的方式选择该使用哪张图片。
+
+## 使用字体图标(iconfont)
+
+## 卡片组件(card)
+
+## 列表卡片组件(list-card, nav, swiper)
+
+## 首页新闻资讯
+
+## 首页英雄列表
+
+## 新闻详情页
+
+## 英雄详情页

@@ -17,7 +17,8 @@
             <!-- on-success表示成功后返回的参数中找到地址赋给model.icon展示出图标 -->
             <el-upload
               class="avatar-uploader"
-              :action="$http.defaults.baseURL + '/upload'"
+              :action="uploadUrl"
+              :headers="getAuthHeaders()"
               :show-file-list="false"
               :on-success="afterUpload"
             >
@@ -114,7 +115,8 @@
               <el-form-item label="图标">
                 <el-upload
                   class="avatar-uploader"
-                  :action="$http.defaults.baseURL + '/upload'"
+                  :action="uploadUrl"
+                  :headers="getAuthHeaders()"
                   :show-file-list="false"
                   :on-success="(res) => $set(item, 'icon', res.url)"
                 >
@@ -167,6 +169,7 @@ export default {
         scores: {
           difficult: 0,
         },
+        skills: [],
       },
     };
   },

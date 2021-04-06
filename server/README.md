@@ -196,7 +196,7 @@ module.exports = (app) => {
 };
 ```
 
-## 英雄编辑
+## 英雄管理
 
 英雄的类型应该是可选的，而不是输入的，并且保存的也应该是类型的`_id`。
 
@@ -250,24 +250,196 @@ const schema = new mongoose.Schema({
 module.exports = mongoose.model("Hero", schema);
 ```
 
-### 编辑英雄技能
-
-### 英雄技能删除
-
-## 创建文章和编辑文章
-
-### 富文本编辑器`vue2-editor`
-
-### 富文本中图片上传
-
 ## 广告管理
+
+广告管理中的schema模型中应该包含广告标题和广告内容，这里的内容使用数组，其中包含图片还有跳转链接。
+
+```js
+const mongoose = require("mongoose");
+const schema = new mongoose.Schema({
+  name: { type: String },
+  items: [
+    {
+      image: { type: String },
+      url: { type: String },
+    },
+  ],
+});
+module.exports = mongoose.model("Ad", schema);
+```
 
 ## 管理员账号管理（bcrypt）
 
-## 登录页面
+管理员schema模型中应有用户名和密码。
+
+```js
+const schema = new mongoose.Schema({
+  username: { type: String },
+  password: {
+    type: String, 
+    select: false,
+    set(val) {
+      return require("bcrypt").hashSync(val, 10);
+    },
+  },
+});
+```
+
+这里保存密码我们需要进行加密，使得管理人员也应该不知道密码，所以存入数据库的密码就是加了密的密文，且不会更改，所以使用`select`不被显示。
+
+- 对某一项数据可以使用set函数，这个函数的作用就是对传入数据进行操作再进行保存。set函数传入的参数就是原本数据库传来的值，最后函数中需要返回一个值。
+
+  > 散列需要模块**bcrypt**，安装：`npm  i bcrypt`，这个模块就是对传入的值进行加密，使用了单项hash算法。
+
+- 模块中有个函数`hashSync`，是一个同步方法，第一个参数接受值，就是需要加密的值，第二个参数就是加密的等级，等级越高，安全性越高但是加密越耗时，反之等级低则安全性低加密快速，一般取**10-12**。
+
+这样操作之后，当前端点击提交按钮时，在服务端就会对密码进行加密。
+
+密码在编辑界面时是不可查询的。这样做是因为当再次进入编辑页面保存时，未检测出密码也就不会再次加密。
 
 ## 登录接口
 
-## 服务器登录校验（jwt）
+- 在前端，通过点击登录将登录的用户名和密码传到服务器端来。在后端中进行校验用户名或者密码等操作，最后将数据返回给前端。
 
-## 服务器登录校验（assert）
+- 当校验成功后，服务器生成一串秘钥，返回给前端，前端凭借这串秘钥证明自己是哪个用户。
+
+1. `req.body`中就包含了用户名和密码，通过解构赋值解构出来。
+
+2. 根据用户名找用户。判断用户名不存在的情况。
+
+   > 因为之前显式地不能查询密码，在这里之后的操作中需要校验密码，所以还要使用select字段重新强制取出密码。
+
+3. 校验密码，判断密码错误的情况。
+
+   > 明文与密文的比对也是使用bcrypt模块，之前加密是使用hashSync，这里比对就是使用compareSync，第一个参数就是前端传入的密码，第二个参数就是数据库保存的密文。
+
+4. 此时全部都正确，发送token。
+
+   > 需要使用jsonwebtoken这个模块返回token，它有个方法就是sign生成一个签名，第一个参数就是需要加密保存在前端的信息。第二个参数是一个秘钥，通过这个秘钥再使用算法来生成一个token，客户端是可以不需要秘钥就鞥解密它的，但是需要验证（jwt.verify）正确性。
+   >
+   > `app.get`当只有一个参数时，就是获取秘密字段。
+
+```js
+  app.post("/admin/api/login", async (req, res) => {
+    const { username, password } = req.body; 
+    const user = await AdminUser.findOne({ username }).select("+password");
+    assert(username !== "", 422, "请输入用户名");
+    assert(user, 422, "用户不存在");
+    //校验密码,将明文和密文进行比对
+    const isValid = require("bcrypt").compareSync(password, user.password);
+    assert(isValid, 422, "密码错误");
+    //返回token
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      app.get("secret")
+    );
+    res.send({ token });
+  });
+```
+
+设置token生成时使用的秘钥。这里需要在server下的index.js中全局设置。
+
+`app.set`设置秘密字段，第一个参数就是名称`secret`，第二个参数就是字段具体内容。
+
+```js
+var fs = require("fs");
+// 全局中配置秘密字段
+fs.readFile(__dirname + "/a.txt", function (err, data) {
+  if (err) {
+    return err;
+  } else {
+    app.set("secret", data.toString());
+  }
+});
+```
+
+### 服务器登录校验（jwt）
+
+> **为什么需要token？**
+>
+> 前端本地保留的token是为了进行登录校验。
+>
+> 当没有进行token验证时，前端不能访问管理页面的数据。
+>
+> 只有进行了token验证，才表示是登录成功的管理员，才有权管理数据。
+
+使用到中间件进行token验证，当进行资源请求时，就进行token的验证。当token不匹配时不能让前端进行访问。
+
+1. 服务器端接收到前端传来的授权信息`Authorization`。分割开取得后面部分的token密文。
+
+   > 后端里的授权信息是小写，前端里的是大写。
+
+2. 使用`verify`方法验证token正确性，第一个参数就是前端传来的token，第二个就是secret字段。
+
+   > jsonwebtoken中有decode方法表示解开token，但是不会验证对错,verify解析token提取出id。
+
+3. 解析正确时会包含着用户的信息，这里之前设置的加密的就是**id**，所以取出id。
+
+4. 根据id查找到相应的user，添加到req中，以便之后使用。相应的用户展示相应的数据。
+
+```js
+  const authMiddleware = async (req, res, next) => {  
+    const token = String(req.headers.authorization || "")
+      .split(" ")
+      .pop(); 
+    assert(token, 401, "请先登录"); 
+    const { id } = jwt.verify(token, app.get("secret"));
+    assert(id, 401, "请先登录");
+    req.user = await AdminUser.findById(id);
+    assert(req.user, 401, "请先登录");
+    next();
+  };
+```
+
+### 服务器登录校验（assert）
+
+`http-assert`是一个npm包，主要用于处理错误，能更简洁方便快速地处理错误。
+
+>**assert(token, 401, "请先登录");** 
+>
+>第一个参数就是条件，需要满足这个条件。
+>
+>第二个参数就是状态码，当不满足这个条件时返回的状态码。
+>
+>第三个参数就是返回错误时的message。
+
+### 服务器登录校验（中间件）
+
+将之前定义的`authMiddleware`验证方法放至请求资源函数中去，使其成为一个中间件。
+
+这是请求资源的接口，这里使用了两个中间件。
+
+- 第一个中间件是验证前端传来的token。
+- 第二个接口是对模型名进行单复数大小写变化，在req中挂载数据库Model，这样根据前端的接口，就能直接对相应的model进行访问。
+- 最后挂载路由。
+
+```js
+  app.use(
+    "/admin/api/rest/:resource",
+    authMiddleware(),
+    resourceMiddleware(),
+    router
+  );
+```
+
+这里的中间件又可以重新封装在不同文件中。
+
+```shell
+middleware
+│  auth.js
+│  resource.js
+```
+
+这里导出的使用方法与db.js中app的使用方法一致，导出的是一个函数，如果要使用它，就需要加上**()**。
+
+```js
+//auth.js
+module.exports = (options) => async (req, res, next) => { 
+  //...
+};
+```
+
+
+

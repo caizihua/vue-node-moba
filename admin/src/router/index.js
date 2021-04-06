@@ -25,6 +25,8 @@ const routes = [
     path: "/login",
     name: "login",
     component: Login,
+    //meta称为路由元信息，可以被守卫查询到
+    meta: { isPublic: true },
   },
   {
     path: "/",
@@ -121,5 +123,11 @@ const routes = [
 const router = new VueRouter({
   routes,
 });
-
+//表示每次进入路由时做什么
+router.beforeEach((to, from, next) => {
+  if (!to.meta.isPublic && !localStorage.token) {
+    return next("/login");
+  }
+  next();
+});
 export default router;

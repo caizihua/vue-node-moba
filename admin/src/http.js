@@ -6,7 +6,7 @@ const http = axios.create({
   baseURL: "http://localhost:3000/admin/api",
 });
 
-//给http添加拦截器
+//给http添加拦截器，添加token传给后端
 http.interceptors.request.use(
   function(config) {
     //给请求头添加授权信息Authorization
@@ -16,7 +16,6 @@ http.interceptors.request.use(
     return config;
   },
   function(error) {
-    // Do something with request error
     return Promise.reject(error);
   }
 );
@@ -40,7 +39,6 @@ http.interceptors.response.use(
         router.push("/login");
       }
     }
-
     return Promise.reject(err);
   }
 );

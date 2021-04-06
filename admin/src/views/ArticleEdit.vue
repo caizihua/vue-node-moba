@@ -58,7 +58,6 @@ export default {
   methods: {
     //富文本中插入图片函数
     async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
-      console.log(1);
       const formData = new FormData();
       //添加file文件
       formData.append("file", file);
@@ -96,7 +95,6 @@ export default {
         }
       }
       //跳转到分类页面
-
       //提示保存成功
       this.$message({
         type: "success",

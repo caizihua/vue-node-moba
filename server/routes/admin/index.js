@@ -3,11 +3,16 @@ module.exports = (app) => {
   const express = require("express");
   const jwt = require("jsonwebtoken");
   var assert = require("http-assert");
-  const AdminUser = require("../../models/AdminUser");
+  const AdminUser = require("../../models/AdminUser.js");
   const router = express.Router({
     //这个参数表示将动态resource能传递给router，这样router里面的路由就能使用这些参数
     // mergeParams: true,
   });
+
+  //5登录授权中间件
+  const authMiddleware = require("../../middleware/auth");
+  //9资源转换中间件
+  const resourceMiddleware = require("../../middleware/resource");
 
   router.post("/", async (req, res) => {
     const model = await req.Model.create(req.body);
@@ -41,34 +46,13 @@ module.exports = (app) => {
     const model = await req.Model.findById(req.params.id);
     res.send(model);
   });
-  //5将验证模块抽离
-  const authMiddleware = async (req, res, next) => {
-    //服务器登录验证
-    //后端中的请求头中的请求都是小写，前端中是大写
-    const token = String(req.headers.authorization || "")
-      .split(" ")
-      .pop();
-    //考虑校验码为空时报错
-    assert(token, 401, "请先登录");
-    //jsonwebtoken中有decode方法表示解开token，但是不会验证对错,verify解析token提取出id
-    const { id } = jwt.verify(token, app.get("secret"));
-    assert(id, 401, "请先登录");
-    req.user = await AdminUser.findById(id);
-    assert(req.user, 401, "请先登录");
-    next();
-  };
-  //6动态的resource接受接口参数,插入中间件，当调用接口是先调用函数，出现next()才处理接下来的
+
+  //6资源列表
   app.use(
+    //动态的resource接受接口参数,插入中间件，当调用接口是先调用函数，出现next()才处理接下来的
     "/admin/api/rest/:resource",
-    authMiddleware,
-    (req, res, next) => {
-      //引入模块处理单复数转换，下划线单词的格式转换等
-      //classify转类名
-      const modelName = require("inflection").classify(req.params.resource);
-      //在req中挂载
-      req.Model = require(`../../models/${modelName}`);
-      next();
-    },
+    authMiddleware(),
+    resourceMiddleware(),
     router
   );
   //7上传文件代码
@@ -76,12 +60,17 @@ module.exports = (app) => {
   //dest属性表示在哪里存储文件,接受单个文件的上传名字为file，因为接口formData中的名字就是file
   const multer = require("multer");
   const upload = multer({ dest: __dirname + "/../../uploads" });
-  app.post("/admin/api/upload", upload.single("file"), async (req, res) => {
-    const file = req.file;
-    //添加访问路径，具体的就是file里面的filename，是二进制数据
-    file.url = `http://localhost:3000/uploads/${file.filename}`;
-    res.send(file);
-  });
+  app.post(
+    "/admin/api/upload",
+    authMiddleware(),
+    upload.single("file"),
+    async (req, res) => {
+      const file = req.file;
+      //添加访问路径，具体的就是file里面的filename，是二进制数据
+      file.url = `http://localhost:3000/uploads/${file.filename}`;
+      res.send(file);
+    }
+  );
   //8token
   app.post("/admin/api/login", async (req, res) => {
     const { username, password } = req.body;

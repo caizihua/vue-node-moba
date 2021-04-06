@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div>
     <el-card header="请先登录" class="login-card">
       <el-form @submit.native.prevent="login">
         <el-form-item label="用户名">
@@ -36,7 +36,7 @@ export default {
   methods: {
     async login() {
       const res = await this.$http.post("login", this.model);
-      //在前端中保存下来
+      //在前端中保存下来token
       localStorage.token = res.data.token;
       console.log(this.$router);
       this.$router.push("/");

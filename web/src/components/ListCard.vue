@@ -1,0 +1,44 @@
+<template>
+  <!-- 卡片列表除公用的样式 -->
+  <div>
+    <!-- 卡片头接着里面就有卡片的公用内容 -->
+    <m-card :icon="icon" :title="title">
+      <div class="nav jc-between pt-3">
+        <div
+          class="nav-item"
+          :class="{ active: active1 === i }"
+          v-for="(category, i) in categories"
+          :key="i"
+          @click="active1 = i"
+        >
+          <div class="nav-link">{{ category.name }}</div>
+        </div>
+      </div>
+      <div class="pt-3">
+        <swiper>
+          <swiper-slide v-for="(category2, i) in categories" :key="i">
+            <!-- 卡片轮播中的内容 -->
+            <slot name="items" :category1="category2"></slot>
+          </swiper-slide>
+        </swiper>
+      </div>
+    </m-card>
+  </div>
+</template>
+  
+<script>
+export default {
+  props: {
+    //Home.vue传来的数据
+    icon: { type: String, required: true },
+    title: { type: String, required: true },
+    categories: { type: Array, required: true },
+  },
+  data() {
+    return {
+      //定义激活状态高亮
+      active1: 0,
+    };
+  },
+};
+</script>

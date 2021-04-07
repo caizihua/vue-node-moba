@@ -69,3 +69,27 @@ $spacing-sizes: (
   4: 1.5,
   5: 3,
 );
+//sprite
+$news: (news, 1.7692rem, 1.5385rem, 63.546% 15.517%);
+$stories: (stories, 1.7692rem, 1.5385rem, 90.483% 15.614%);
+$shop: (shop, 1.4615rem, 1.6923rem, 36.746% 0.924%);
+$experience: (experience, 1.5385rem, 1.5385rem, 10.408% 15.517%);
+$couple: (couple, 2.3846rem, 1.9231rem, 9.302% 0.813%);
+$glory: (glory, 1.8462rem, 1.5385rem, 36.467% 15.287%);
+$fan: (fan, 1.5385rem, 1.6154rem, 89.733% 1.266%);
+$camp: (camp, 1.8462rem, 1.8462rem, 63.3% 0.927%);
+$public: (public, 1.8462rem, 1.5385rem, 0 96.207%);
+$arrow: (arrow, 0.7692rem, 0.7692rem, 38.577% 52.076%);
+
+$icons: (
+  $news,
+  $stories,
+  $shop,
+  $experience,
+  $couple,
+  $glory,
+  $fan,
+  $camp,
+  $public,
+  $arrow
+);

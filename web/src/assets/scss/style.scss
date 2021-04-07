@@ -117,12 +117,22 @@ a {
 
 //nav
 .nav {
+  display: flex;
   //&表示是同级的关系
   .nav-item {
     border-bottom: 3px solid transparent;
     padding-bottom: 0.2rem;
     &.active {
-      border-bottom: 3px solid #fff;
+      color: map-get($colors, "primary");
+      border-bottom-color: map-get($colors, "primary");
+    }
+  }
+  &.nav-inverse {
+    .nav-item {
+      color: map-get($colors, "white");
+      &.active {
+        border-bottom-color: map-get($colors, "white");
+      }
     }
   }
 }
@@ -140,9 +150,12 @@ a {
   background: url("../images/index.png") no-repeat 0 0;
   background-size: 28.6154rem;
   display: inline-block;
-  &.sprite-news {
-    background-position: 63.546% 15.517%;
-    width: 1.7692rem;
-    height: 1.5385rem;
+}
+
+@each $n, $w, $h, $p in $icons {
+  .sprite-#{$n} {
+    width: $w;
+    height: $h;
+    background-position: $p;
   }
 }

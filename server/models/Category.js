@@ -10,5 +10,19 @@ const schema = new mongoose.Schema({
   //通过关联模型parent就能通过这个模型找到这个模型当中某个数据的ObjectId
   parent: { type: mongoose.SchemaTypes.ObjectId, ref: "Category" },
 });
+
+schema.virtual("children", {
+  localField: "_id",
+  foreignField: "parent",
+  justOne: false,
+  ref: "Category",
+});
+
+schema.virtual("newsList", {
+  localField: "_id",
+  foreignField: "categories",
+  justOne: false,
+  ref: "Article",
+});
 //生成并导出模型
 module.exports = mongoose.model("Category", schema);

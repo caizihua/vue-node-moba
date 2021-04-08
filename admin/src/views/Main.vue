@@ -72,7 +72,8 @@
 
       <el-main>
         <!-- 设置路由容器，子路由在此显示 -->
-        <router-view></router-view>
+        <!-- 默认是通过组件来区分页面的，但是新建和编辑是一个组件，所以通过path区分 -->
+        <router-view :key="$route.path"></router-view>
       </el-main>
     </el-container>
   </el-container>

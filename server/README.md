@@ -144,7 +144,7 @@ module.exports = (app) => {
 >
 > - 定义router时接口一个参数mergeParams，这个参数就是可以动态地将接口中的resource参数传给router，这样router中具体的路由就可以使用这些参数。
 >
-> - 前端请求的接口resource具体会是小写开口复数形式，比如说categories，而对应的schema是大写单数的形式如Category，所以需要引入模块进行单复数转换，这个模块就是inflection。
+> - 前端请求的接口resource具体会是小写开头复数形式，比如说categories，而对应的schema是大写单数的形式如Category，所以需要引入模块进行单复数转换，这个模块就是inflection。
 > - 最后将得到的schema挂载到req中就可以引用了。
 
 对于分类列表中父级分类的操作，在通用crud中就不能写死，因为有的模型不适用于Category模型定义的父级分类这种特殊分类。所以需要特殊处理。

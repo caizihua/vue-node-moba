@@ -34,16 +34,43 @@
     <m-list-card icon="Menu" title="新闻资讯" :categories="newsCats">
       <!-- 卡片列表中的数据需要用插槽传递 -->
       <template #items="{ category1 }">
-        <div class="py-2" v-for="(news, i) in category1.newsList" :key="i">
-          <span>[{{ news.categoryName }}]</span>
-          <span>|</span>
-          <span>{{ news.title }}</span>
-          <span>{{ news.data }}</span>
-        </div>
+        <router-link
+          tag="div"
+          :to="`/articles/${news._id}`"
+          class="py-2 fs-lg d-flex"
+          v-for="(news, i) in category1.newsList"
+          :key="i"
+        >
+          <span class="text-info">[{{ news.categoryName }}]</span>
+          <span class="px-2">|</span>
+          <span class="flex-1 text-dark-1 text-ellipsis pr-2">{{
+            news.title
+          }}</span>
+          <span class="text-grey fs-sm">{{ news.createdAt | date }}</span>
+        </router-link>
       </template>
     </m-list-card>
 
-    <m-card icon="Artifact-yingxiong" title="英雄列表"> </m-card>
+    <m-list-card
+      icon="Artifact-yingxiong"
+      title="英雄列表"
+      :categories="heroCats"
+    >
+      <!-- 卡片列表中的数据需要用插槽传递 -->
+      <template #items="{ category1 }">
+        <div class="d-flex flex-wrap jc-between">
+          <div
+            class="p-2 text-center"
+            style="width: 20%"
+            v-for="(hero, i) in category1.heroList"
+            :key="i"
+          >
+            <img :src="hero.avatar" class="w-100" />
+            <div>{{ hero.name }}</div>
+          </div>
+        </div>
+      </template>
+    </m-list-card>
     <m-card icon="Artifact-yingxiong" title="精彩视频"> </m-card>
     <m-card icon="Artifact-yingxiong" title="图文攻略"> </m-card>
     <div v-for="n in 50" :key="n">1</div>
@@ -51,7 +78,13 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
 export default {
+  filters: {
+    date(val) {
+      return dayjs(val).format("MM/DD");
+    },
+  },
   data() {
     return {
       // swiper
@@ -73,49 +106,23 @@ export default {
         { icons: "camp", name: "王者营地" },
         { icons: "public", name: "公众号" },
       ],
-      newsCats: [
-        {
-          name: "热门",
-          newsList: new Array(5).fill({}).map(() => ({
-            categoryName: "公告",
-            title: "4月6日体验服停机更新公告",
-            data: "06/01",
-          })),
-        },
-        {
-          name: "新闻",
-          newsList: new Array(3).fill({}).map(() => ({
-            categoryName: "公告",
-            title: "4月6日体验服停机更新公告",
-            data: "06/01",
-          })),
-        },
-        {
-          name: "公告",
-          newsList: new Array(4).fill({}).map(() => ({
-            categoryName: "公告",
-            title: "4月6日体验服停机更新公告",
-            data: "06/01",
-          })),
-        },
-        {
-          name: "活动",
-          newsList: new Array(3).fill({}).map(() => ({
-            categoryName: "公告",
-            title: "4月6日体验服停机更新公告",
-            data: "06/01",
-          })),
-        },
-        {
-          name: "赛事",
-          newsList: new Array(2).fill({}).map(() => ({
-            categoryName: "公告",
-            title: "4月6日体验服停机更新公告",
-            data: "06/01",
-          })),
-        },
-      ],
+      newsCats: [],
+      heroCats: [],
     };
+  },
+  methods: {
+    async fetchNewsCats() {
+      const res = await this.$http.get("news/list");
+      this.newsCats = res.data;
+    },
+    async fetchHeroCats() {
+      const res = await this.$http.get("heroes/list");
+      this.heroCats = res.data;
+    },
+  },
+  created() {
+    this.fetchNewsCats();
+    this.fetchHeroCats();
   },
 };
 </script>

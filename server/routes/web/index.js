@@ -1,9 +1,25 @@
+/* JSON.stringify(
+  $$(".hero-nav > li")
+    .map((li, i) => {
+      return {
+        name: li.innerText,
+        heroes: $$("li", $$(".hero-list")[i]).map((el) => {
+          return {
+            name: $$("h3", el)[0].innerHTML,
+            avatar: $$("img", el)[0].src,
+          };
+        }),
+      };
+    })
+); */
 //为了快速渲染文章列表数据，这里通过接口实现，应用中不应有这个接口，这里这是为了作测试处理
 module.exports = (app) => {
   const router = require("express").Router();
   const mongoose = require("mongoose");
   const Category = mongoose.model("Category");
   const Article = mongoose.model("Article");
+  const Hero = mongoose.model("Hero");
+  //导入新闻数据
   router.get("/news/init", async (req, res) => {
     const parent = await Category.findOne({
       name: "新闻分类",
@@ -42,7 +58,7 @@ module.exports = (app) => {
     await Article.insertMany(newsList);
     res.send(newsList);
   });
-
+  //新闻列表接口 测试用
   router.get("/news/list", async (req, res) => {
     /* const parent = await Category.findOne({ name: "新闻分类" })
       .populate({
@@ -81,8 +97,64 @@ module.exports = (app) => {
       newsList: await Article.find()
         .where({ categories: { $in: subCats } })
         .limit(5)
+        .lean()
+        .populate("categories"),
+    });
+
+    cats.map((cat) => {
+      cat.newsList.map((news) => {
+        news.categoryName =
+          cat.name === "热门" ? news.categories[0].name : cat.name;
+        return news;
+      });
+      return cat;
+    });
+    res.send(cats);
+  });
+  //导入英雄数据 测试用
+  const hero1 = require("./hero.js");
+  router.get("/heroes/init", async (req, res) => {
+    await Hero.deleteMany({});
+    const rawData = hero1;
+    for (let cat of rawData) {
+      if (cat.name === "热门") {
+        continue;
+      }
+      const category = await Category.findOne({ name: cat.name });
+      cat.heroes = cat.heroes.map((hero) => {
+        hero.categories = [category];
+        return hero;
+      });
+      await Hero.insertMany(cat.heroes);
+    }
+
+    res.send(await Hero.find());
+  });
+
+  router.get("/heroes/list", async (req, res) => {
+    const parent = await Category.findOne({ name: "英雄分类" });
+    const cats = await Category.aggregate([
+      //通过match过滤数据
+      { $match: { parent: parent._id } },
+      //关联查询
+      {
+        $lookup: {
+          from: "heroes",
+          localField: "_id",
+          foreignField: "categories",
+          as: "heroList",
+        },
+      },
+    ]);
+    const subCats = cats.map((v) => v._id);
+    cats.unshift({
+      name: "热门",
+      heroList: await Hero.find()
+        .where({ categories: { $in: subCats } })
+        .limit(10)
         .lean(),
     });
+
     res.send(cats);
   });
   app.use("/web/api", router);

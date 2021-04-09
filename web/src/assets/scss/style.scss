@@ -159,3 +159,11 @@ a {
     background-position: $p;
   }
 }
+
+//text
+.text-ellipsis {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

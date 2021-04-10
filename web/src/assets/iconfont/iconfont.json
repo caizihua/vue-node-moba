@@ -1,10 +1,17 @@
 {
-  "id": "",
-  "name": "",
+  "id": "2477777",
+  "name": "vue-node-moba",
   "font_family": "iconfont",
   "css_prefix_text": "icon-",
   "description": "",
   "glyphs": [
+    {
+      "icon_id": "10061214",
+      "name": "链接",
+      "font_class": "lianjie",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
     {
       "icon_id": "4395678",
       "name": "menu",

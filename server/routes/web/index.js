@@ -54,8 +54,8 @@ module.exports = (app) => {
         title: title,
       };
     });
-    await Article.deleteMany({});
-    await Article.insertMany(newsList);
+    // await Article.deleteMany({});
+    // await Article.insertMany(newsList);
     res.send(newsList);
   });
   //新闻列表接口 测试用
@@ -114,7 +114,7 @@ module.exports = (app) => {
   //导入英雄数据 测试用
   const hero1 = require("./hero.js");
   router.get("/heroes/init", async (req, res) => {
-    await Hero.deleteMany({});
+    // await Hero.deleteMany({});
     const rawData = hero1;
     for (let cat of rawData) {
       if (cat.name === "热门") {
@@ -125,12 +125,12 @@ module.exports = (app) => {
         hero.categories = [category];
         return hero;
       });
-      await Hero.insertMany(cat.heroes);
+      // await Hero.insertMany(cat.heroes);
     }
 
     res.send(await Hero.find());
   });
-
+  //英雄列表接口
   router.get("/heroes/list", async (req, res) => {
     const parent = await Category.findOne({ name: "英雄分类" });
     const cats = await Category.aggregate([
@@ -156,6 +156,17 @@ module.exports = (app) => {
     });
 
     res.send(cats);
+  });
+  //文章详情
+  router.get("/articles/:id", async (req, res) => {
+    const data = await Article.findById(req.params.id).lean();
+    data.related = await Article.find()
+      .where({
+        categories: { $in: data.categories },
+        categories: { $ne: data.categories },
+      })
+      .limit(2);
+    res.send(data);
   });
   app.use("/web/api", router);
 };

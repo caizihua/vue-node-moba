@@ -20,6 +20,7 @@ const routes = [
         path: "/articles/:id",
         name: "article",
         component: Article,
+        props: true,
       },
     ],
   },

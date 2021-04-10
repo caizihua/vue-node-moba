@@ -167,3 +167,14 @@ a {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+p {
+  line-height: 1.5em;
+}
+
+//borders
+@each $dir in (top, right, bottom, left) {
+  .border-#{$dir} {
+    border-#{$dir}: 1px solid $border-color;
+  }
+}

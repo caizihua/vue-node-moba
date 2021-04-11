@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
   name: { type: String },
   avatar: { type: String },
+  banner: { type: String },
   title: { type: String },
   // 这里的关联模型就是Category，因为需要在分类模型中选择职业的类型
   //这里使用数组表示可以关联多个

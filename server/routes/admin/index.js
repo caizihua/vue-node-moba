@@ -37,10 +37,8 @@ module.exports = (app) => {
     if (req.Model.modelName === "Category") {
       queryOptions.populate = "parent";
     }
-    const items = await req.Model.find()
-      .setOptions(queryOptions)
-      .limit(200)
-      .sort({ _id: -1 });
+    const items = await req.Model.find().setOptions(queryOptions).limit(200);
+    // .sort({ _id: -1 })按时间倒序查询
     res.send(items);
   });
 

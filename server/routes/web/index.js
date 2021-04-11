@@ -168,5 +168,9 @@ module.exports = (app) => {
       .limit(2);
     res.send(data);
   });
+  router.get("/heroes/:id", async (req, res) => {
+    const data = await Hero.findById(req.params.id).lean();
+    res.send(data);
+  });
   app.use("/web/api", router);
 };

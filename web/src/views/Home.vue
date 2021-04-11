@@ -59,7 +59,9 @@
       <!-- 卡片列表中的数据需要用插槽传递 -->
       <template #items="{ category1 }">
         <div class="d-flex flex-wrap jc-between">
-          <div
+          <router-link
+            tag="div"
+            :to="`/heroes/${hero._id}`"
             class="p-2 text-center"
             style="width: 20%"
             v-for="(hero, i) in category1.heroList"
@@ -67,7 +69,7 @@
           >
             <img :src="hero.avatar" class="w-100" />
             <div>{{ hero.name }}</div>
-          </div>
+          </router-link>
         </div>
       </template>
     </m-list-card>

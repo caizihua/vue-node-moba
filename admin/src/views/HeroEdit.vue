@@ -20,10 +20,22 @@
               :action="uploadUrl"
               :headers="getAuthHeaders()"
               :show-file-list="false"
-              :on-success="afterUpload"
+              :on-success="(res) => (model.avatar = res.url)"
             >
               <!-- 如果有图片地址就显示图片，没有就显示上传图标 -->
               <img v-if="model.avatar" :src="model.avatar" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="Banner">
+            <el-upload
+              class="avatar-uploader"
+              :action="uploadUrl"
+              :headers="getAuthHeaders()"
+              :show-file-list="false"
+              :on-success="(res) => $set(model, 'banner', res.url)"
+            >
+              <img v-if="model.banner" :src="model.banner" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
@@ -166,6 +178,7 @@ export default {
       model: {
         name: "",
         avatar: "",
+        banner: "",
         scores: {
           difficult: 0,
         },
@@ -207,9 +220,9 @@ export default {
       const res = await this.$http.get(`rest/items`);
       this.items = res.data;
     },
-    afterUpload(res) {
+    /*     afterUpload(res) {
       this.$set(this.model, "avatar", res.url);
-    },
+    }, */
   },
   created() {
     this.fetchItems();

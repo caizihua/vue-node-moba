@@ -109,10 +109,26 @@ a {
 //button
 .btn {
   border: none;
+  justify-content: center;
   border-radius: 0.1538rem;
   //取之前定义的工具类中的样式
   font-size: map-get($font-sizes, "sm") * $base-font-size;
   padding: 0.2rem 0.6rem;
+  &.btn-lg {
+    display: flex;
+    align-items: center;
+    background: map-get($colors, "light-2");
+    border: 1px solid #fcfcfc;
+    border-radius: 0.4rem;
+    padding: 0.5rem 0;
+    font-style: 1rem;
+    i {
+      color: map-get($colors, "primary");
+      font-weight: bold;
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+    }
+  }
 }
 
 //nav

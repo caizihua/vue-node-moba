@@ -3,6 +3,7 @@
   <div>
     <!-- 卡片头接着里面就有卡片的公用内容 -->
     <m-card :icon="icon" :title="title">
+      <div class="border-bottom"></div>
       <div class="nav jc-between pt-3">
         <div
           class="nav-item"

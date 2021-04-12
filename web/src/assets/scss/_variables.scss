@@ -1,11 +1,15 @@
 //colors
+//当自定义属性和原本自带的冲突时使用引号包起来
 $colors: (
   "primary": #db9e3f,
-  //当自定义属性和原本自带的冲突时使用引号包起来
-    "info": #4b67af,
+  "info": #4b67af,
+  "blue-1": #1f3695,
+  "danger": #791a16,
   "info-1": #4394e4,
+  "green-1": #3a4727,
   "white": #fff,
   "light": #f9f9f9,
+  "light-2": #ececf0,
   "light-1": #d4d9de,
   "grey": #999,
   "grey-1": #666,

@@ -75,7 +75,6 @@
     </m-list-card>
     <m-card icon="Artifact-yingxiong" title="精彩视频"> </m-card>
     <m-card icon="Artifact-yingxiong" title="图文攻略"> </m-card>
-    <div v-for="n in 50" :key="n">1</div>
   </div>
 </template>
 

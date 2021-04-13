@@ -19,6 +19,8 @@ app.use(express.json());
 app.use(require("cors")());
 //开放一个端口uploads前端好访问其中的文件，地址就是静态的端口
 app.use("/uploads", express.static(__dirname + "/uploads"));
+app.use("/admin/", express.static(__dirname + "/admin"));
+app.use("/", express.static(__dirname + "/web"));
 
 require("./routes/admin")(app);
 require("./plugins/db")(app);

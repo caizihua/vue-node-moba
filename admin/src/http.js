@@ -3,7 +3,9 @@ import Vue from "vue";
 import router from "./router";
 const http = axios.create({
   //这是api地址，使用axios进行网络请求
-  baseURL: "http://localhost:3000/admin/api",
+  // baseURL: "http://localhost:3000/admin/api",
+  // 本地开发时需要在.env中手动指定地址
+  baseURL: process.env.VUE_APP_API_URL || "/admin/api",
 });
 
 //给http添加拦截器，添加token传给后端

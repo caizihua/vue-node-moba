@@ -1,30 +1,36 @@
 <template>
-  <div class="about">
+  <div>
     <h1>{{ id ? "编辑" : "新建" }}物品</h1>
-    <el-form label-width="80px">
-      <el-form-item label="名称">
-        <el-input v-model="model.name"></el-input>
-      </el-form-item>
-      <el-form-item label="图标">
-        <!-- action表示地址，提交到哪个接口 -->
-        <!-- 默认参数中有个baseURL 这是我们在配置axios中自己定义的 -->
-        <!-- on-success表示成功后返回的参数中找到地址赋给model.icon展示出图标 -->
-        <el-upload
-          class="avatar-uploader"
-          :action="uploadUrl"
-          :headers="getAuthHeaders()"
-          :show-file-list="false"
-          :on-success="afterUpload"
-        >
-          <!-- 如果有图片地址就显示图片，没有就显示上传图标 -->
-          <img v-if="model.icon" :src="model.icon" class="avatar" />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="save"> 提交</el-button>
-      </el-form-item>
-    </el-form>
+    <el-col :span="12" class="about" v-for="n in 4" :key="n">
+      <el-form style="margin-bottom: 50px">
+        <el-form-item label="图标" style="margin-bottom: 0">
+          <!-- action表示地址，提交到哪个接口 -->
+          <!-- 默认参数中有个baseURL 这是我们在配置axios中自己定义的 -->
+          <!-- on-success表示成功后返回的参数中找到地址赋给model.icon展示出图标 -->
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadUrl"
+            :headers="getAuthHeaders()"
+            :show-file-list="false"
+            :on-success="afterUpload"
+          >
+            <!-- 如果有图片地址就显示图片，没有就显示上传图标 -->
+            <img v-if="model.icon" :src="model.icon" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="名称">
+          <el-form :inline="true">
+            <el-form-item>
+              <el-input v-model="model.name" style="width: 200px"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="save"> 提交</el-button>
+            </el-form-item>
+          </el-form>
+        </el-form-item>
+      </el-form>
+    </el-col>
   </div>
 </template>
 

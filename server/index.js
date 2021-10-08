@@ -5,7 +5,7 @@ const app = express();
 
 var fs = require("fs");
 
-// 全局中配置秘密字段
+// 全局中配置秘密字段 
 fs.readFile(__dirname + "/a.txt", function (err, data) {
   if (err) {
     return err;

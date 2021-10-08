@@ -117,6 +117,50 @@ module.exports = (app) => {
 
 通过`/admin/api`端口，进行各种网络请求。相当于api接口。
 
+### 上级分类显示
+
+上级分类简单实现就是通过直接访问已有分类，在已有分类基础上添加子分类，所以添加`el-select`标签进行上级分类的选择。
+
+```vue
+<el-form-item label="上级分类">
+        <!-- model中存入或取出parent -->
+        <el-select v-model="model.parent">
+          <!-- 展示的是名称，真正存的value是id -->
+          <el-option
+            v-for="item in parents"
+            :key="item._id"
+            :label="item.name"
+            :value="item._id"
+          ></el-option>
+        </el-select>
+</el-form-item>
+```
+
+在data中需要定义存放父类的数组。`fetchParents`方法直接获取已有分类并且赋值给parents展示。
+
+```javascript
+data() {
+    return {
+      model: {
+        name: "",
+      },
+      //获取分类名的数组，作为上级分类的可选项
+      parents: [],
+    };
+  },
+methods: {  
+    //获取父级选项分类名称，接口就是categories
+    async fetchParents() {
+      const res = await this.$http.get(`categories`);
+      this.parents = res.data;
+    },
+  },
+  created() { 
+    //获取父级分类名
+    this.fetchParents();
+  },
+```
+
 ### 新建与编辑操作整合
 
 通过组件复用，可以通过CtategoryEdit组件进行新建分类操作和编辑分类操作。
@@ -144,7 +188,7 @@ const routes = [
 
 ```
 
-通过是否传入id可以选择显示编辑还是新建分类。
+在CategoryEdit.vue中通过是否传入id可以选择显示编辑还是新建分类。
 
 ```html
 <h1>{{ id ? "编辑" : "新建" }}分类</h1>

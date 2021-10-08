@@ -108,7 +108,7 @@ module.exports = mongoose.model("Category", schema);
 
 ## 通用CRUD
 
-最开始时，只有分类的各种增删查改，随着需求的增加，会有其他数据的增删查改，比如说物品，新闻资讯等，所以需要一套通用的crud接口来对所有数据进行增删查改，对于某些特殊的数据再进行特殊地处理。
+最开始时，只有分类的各种增删查改，随着需求的增加，会有其他数据的增删查改，比如说物品，新闻资讯等，所以需要一套通用的crud接口来对所有数据进行增删查改，对于某些特殊的数据再进行特殊地处理。 
 
 ```js
 module.exports = (app) => {
@@ -136,16 +136,24 @@ module.exports = (app) => {
 };
 ```
 
-更改接口，这里就通过`rest/:resource`动态地接受接口数据，这里的resource就是前端请求的某个接口，通过这个接口，找到相应的schema，返回给前端相应的数据。
+- 更改接口，这里就通过`rest/:resource`动态地接受接口数据，这里的resource就是前端请求的某个接口，通过这个接口，找到相应的schema，返回给前端相应的数据。
+
+- 当要为某个schema进行操作时，这里应该使用的就是Model，而这个Model是通过父级参数中得到的模型。
 
 > 注意：
 >
 > - app.use接受的第二个参数可以是个函数，这个函数充当中间件的作用，对前面的接口进行处理，当处理完后通过next()，执行后面的事宜，router。
->
-> - 定义router时接口一个参数mergeParams，这个参数就是可以动态地将接口中的resource参数传给router，这样router中具体的路由就可以使用这些参数。
->
-> - 前端请求的接口resource具体会是小写开头复数形式，比如说categories，而对应的schema是大写单数的形式如Category，所以需要引入模块进行单复数转换，这个模块就是inflection。
-> - 最后将得到的schema挂载到req中就可以引用了。
+>- 定义router时接口一个参数mergeParams，**导入父级参数到子级配置中**。这个参数就是可以动态地将接口中的resource参数传给router，这样router中具体的路由就可以使用这些参数。
+> - 前端请求的接口resource具体会是小写开头复数形式，比如说categories，而对应的schema是大写单数的形式如Category，所以需要引入模块进行单复数转换，这个模块就是**inflection**。
+>- 最后将得到的schema挂载到req中就可以引用了。
+
+```js
+app.use("/admin/api/rest/:resource", async (req, res, next) => {
+  const modelName = require('inflection').classify(req.params.resource);
+  req.Model = require(`../../models/${modelName}`);
+  next();
+}, router);
+```
 
 对于分类列表中父级分类的操作，在通用crud中就不能写死，因为有的模型不适用于Category模型定义的父级分类这种特殊分类。所以需要特殊处理。
 
@@ -154,16 +162,16 @@ module.exports = (app) => {
 populate表示关联取出什么东西，如果传入的字段是关联字段就能查出来，关联查询出来的就是一个包含完整信息的对象。这个关联的是parent，所以就会将父级的所有信息作为一个对象取出返回给前端。
 
 ```js
-	router.get("/", async (req, res) => {
-    //不应该是写死的parent因为可能有的模型没有parent
-    //判断是否为分类模型，如果是的话，添加populate
-    const queryOptions = {};
-    if (req.Model.modelName === "Category") {
-      queryOptions.populate = "parent";
-    }
-    const items = await req.Model.find().setOptions(queryOptions).limit(10);
-    res.send(items);
-  });
+router.get("/", async (req, res) => {
+	//不应该是写死的parent因为可能有的模型没有parent
+	//判断是否为分类模型，如果是的话，添加populate
+	const queryOptions = {};
+	if (req.Model.modelName === "Category") {
+  		queryOptions.populate = "parent";
+	}
+	const items = await req.Model.find().setOptions(queryOptions).limit(10);
+	res.send(items);
+});
 ```
 
 ## 图片上传

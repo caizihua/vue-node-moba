@@ -20,19 +20,19 @@ import AdList from "../views/AdList.vue";
 import AdminUserEdit from "../views/AdminUserEdit.vue";
 import AdminUserList from "../views/AdminUserList.vue";
 Vue.use(VueRouter);
-const routes = [
-  {
+const routes = [{
     path: "/login",
     name: "login",
     component: Login,
     //meta称为路由元信息，可以被守卫查询到
-    meta: { isPublic: true },
+    meta: {
+      isPublic: true
+    },
   },
   {
     path: "/",
     component: Main,
-    children: [
-      {
+    children: [{
         path: "/categories/create",
         component: CategoryEdit,
       },

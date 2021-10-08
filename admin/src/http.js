@@ -10,14 +10,14 @@ const http = axios.create({
 
 //给http添加拦截器，添加token传给后端
 http.interceptors.request.use(
-  function(config) {
+  function (config) {
     //给请求头添加授权信息Authorization
     if (localStorage.token) {
       config.headers.Authorization = "Bearer " + localStorage.token;
     }
     return config;
   },
-  function(error) {
+  function (error) {
     return Promise.reject(error);
   }
 );

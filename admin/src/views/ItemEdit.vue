@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>{{ id ? "编辑" : "新建" }}物品</h1>
-    <el-col :span="12" class="about" v-for="n in 4" :key="n">
+    <el-col :span="12" class="about">
       <el-form style="margin-bottom: 50px">
         <el-form-item label="图标" style="margin-bottom: 0">
           <!-- action表示地址，提交到哪个接口 -->

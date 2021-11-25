@@ -10,6 +10,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" native-type="submit">登录</el-button>
+          <el-button type="primary" @click="()=>{this.$router.push('/register')}">注册</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -44,7 +45,7 @@ export default {
         type: "success",
         message: "登录成功",
       });
-    },
+    }, 
   },
 };
 </script>

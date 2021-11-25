@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
 import Login from "../views/Login.vue";
+import Register from "../views/Register.vue";
 import CategoryEdit from "../views/CategoryEdit.vue";
 import CategoryList from "../views/CategoryList.vue";
 
@@ -24,6 +25,14 @@ const routes = [{
     path: "/login",
     name: "login",
     component: Login,
+    //meta称为路由元信息，可以被守卫查询到
+    meta: {
+      isPublic: true
+    },
+  }, {
+    path: "/Register",
+    name: "Register",
+    component: Register,
     //meta称为路由元信息，可以被守卫查询到
     meta: {
       isPublic: true

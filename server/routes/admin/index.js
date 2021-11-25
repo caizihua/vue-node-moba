@@ -57,6 +57,7 @@ module.exports = (app) => {
     router
   );
   //7上传文件代码
+  //express本身不具备自己处理文件的能力，需要中间件multer
   //multer用于处理form-data或者multipart,会添加file对象到req中包含表单上传的文件信息
   //dest属性表示在哪里存储文件,接受单个文件的上传名字为file，因为接口formData中的名字就是file
   const multer = require("multer");
@@ -75,32 +76,32 @@ module.exports = (app) => {
     }
   );
   //8token
-    app.post("/admin/api/login", async (req, res) => {
-      const {
-        username,
-        password
-      } = req.body;
-      //根据用户名找用户,将password强制取出
-      const user = await AdminUser.findOne({
-        username
-      }).select("+password");
-      assert(
-        username !== "", 422, "请输入用户名");
-      assert(user, 422, "用户不存在");
-      //校验密码,将明文和密文进行比对
-      const isValid = require("bcrypt").compareSync(password, user.password);
-      assert(isValid, 422, "密码错误");
-      //返回token
-      const token = jwt.sign({
-          id: user._id,
-        },
-        //只能得到一个参数，获取配置
-        app.get("secret")
-      );
-      res.send({
-        token
-      });
+  app.post("/admin/api/login", async (req, res) => {
+    const {
+      username,
+      password
+    } = req.body;
+    //根据用户名找用户,将password强制取出
+    const user = await AdminUser.findOne({
+      username
+    }).select("+password");
+    assert(
+      username !== "", 422, "请输入用户名");
+    assert(user, 422, "用户不存在");
+    //校验密码,将明文和密文进行比对
+    const isValid = require("bcrypt").compareSync(password, user.password);
+    assert(isValid, 422, "密码错误");
+    //返回token
+    const token = jwt.sign({
+        id: user._id,
+      },
+      //只能得到一个参数，获取配置
+      app.get("secret")
+    );
+    res.send({
+      token
     });
+  });
   //错误处理
   app.use(async (err, req, res, next) => {
     res.status(err.statusCode || 500).send({

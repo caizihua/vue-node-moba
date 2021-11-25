@@ -7,6 +7,7 @@
         <el-table-column prop="_id" label="ID" width="250"> </el-table-column>
         <el-table-column prop="name" label="物品名称"> </el-table-column>
         <el-table-column prop="icon" label="物品图标">
+          <!-- 自定义模板，里面可以写任意东西 -->
           <template slot-scope="scope">
             <img :src="scope.row.icon" style="height: 2.5rem" />
           </template>

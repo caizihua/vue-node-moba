@@ -5,114 +5,124 @@
       <!-- 当value取某个值时，就会默认跳转到el-tab-pane中相应的name属性值的表格 -->
       <el-tabs value="basic">
         <el-tab-pane label="基础信息" name="basic">
-          <el-form-item label="名称">
-            <el-input v-model="model.name"></el-input>
-          </el-form-item>
-          <el-form-item label="称号">
-            <el-input v-model="model.title"></el-input>
-          </el-form-item>
-          <el-form-item label="头像">
-            <!-- action表示地址，提交到哪个接口 -->
-            <!-- 默认参数中有个baseURL 这是我们在配置axios中自己定义的 -->
-            <!-- on-success表示成功后返回的参数中找到地址赋给model.icon展示出图标 -->
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadUrl"
-              :headers="getAuthHeaders()"
-              :show-file-list="false"
-              :on-success="(res) => (model.avatar = res.url)"
-            >
-              <!-- 如果有图片地址就显示图片，没有就显示上传图标 -->
-              <img v-if="model.avatar" :src="model.avatar" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="Banner">
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadUrl"
-              :headers="getAuthHeaders()"
-              :show-file-list="false"
-              :on-success="(res) => $set(model, 'banner', res.url)"
-            >
-              <img v-if="model.banner" :src="model.banner" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="类型">
-            <!-- 添加multiple字段就能进行多选 -->
-            <el-select v-model="model.categories" multiple>
-              <el-option
-                v-for="item of categories"
-                :key="item.id"
-                :value="item._id"
-                :label="item.name"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="难度">
-            <el-rate
-              v-model="model.scores.difficult"
-              :max="9"
-              show-score
-              style="margin-top: 0.7rem"
-            ></el-rate>
-          </el-form-item>
-          <el-form-item label="技能">
-            <el-rate
-              v-model="model.scores.skills"
-              :max="9"
-              show-score
-              style="margin-top: 0.7rem"
-            ></el-rate>
-          </el-form-item>
-          <el-form-item label="攻击">
-            <el-rate
-              v-model="model.scores.attack"
-              :max="9"
-              show-score
-              style="margin-top: 0.7rem"
-            ></el-rate>
-          </el-form-item>
-          <el-form-item label="生存">
-            <el-rate
-              v-model="model.scores.survive"
-              :max="9"
-              show-score
-              style="margin-top: 0.7rem"
-            ></el-rate>
-          </el-form-item>
-          <el-form-item label="顺风出装">
-            <!-- 添加multiple字段就能进行多选 -->
-            <el-select v-model="model.items1" multiple>
-              <el-option
-                v-for="item of items"
-                :key="item.id"
-                :value="item._id"
-                :label="item.name"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="逆风出装">
-            <!-- 添加multiple字段就能进行多选 -->
-            <el-select v-model="model.items2" multiple>
-              <el-option
-                v-for="item of items"
-                :key="item.id"
-                :value="item._id"
-                :label="item.name"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="使用技巧">
-            <el-input type="textarea" v-model="model.usageTips"></el-input>
-          </el-form-item>
-          <el-form-item label="对抗技巧">
-            <el-input type="textarea" v-model="model.battleTips"></el-input>
-          </el-form-item>
-          <el-form-item label="团战思路">
-            <el-input type="textarea" v-model="model.teamTips"></el-input>
-          </el-form-item>
+          <el-form :inline="true">
+            <el-form-item label="名称">
+              <el-input v-model="model.name"></el-input>
+            </el-form-item>
+            <el-form-item label="称号">
+              <el-input v-model="model.title"></el-input>
+            </el-form-item>
+            <el-form-item label="类型">
+              <!-- 添加multiple字段就能进行多选 -->
+              <el-select v-model="model.categories" multiple>
+                <el-option
+                  v-for="item of categories"
+                  :key="item.id"
+                  :value="item._id"
+                  :label="item.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <el-form label-position="left" label-width="60px">
+            <el-form-item label="头像">
+              <!-- action表示地址，提交到哪个接口 -->
+              <!-- 默认参数中有个baseURL 这是我们在配置axios中自己定义的 -->
+              <!-- on-success表示成功后返回的参数中找到地址赋给model.icon展示出图标 -->
+              <el-upload
+                class="avatar-uploader"
+                :action="uploadUrl"
+                :headers="getAuthHeaders()"
+                :show-file-list="false"
+                :on-success="(res) => (model.avatar = res.url)"
+              >
+                <!-- 如果有图片地址就显示图片，没有就显示上传图标 -->
+                <img v-if="model.avatar" :src="model.avatar" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="Banner">
+              <el-upload
+                class="avatar-uploader"
+                :action="uploadUrl"
+                :headers="getAuthHeaders()"
+                :show-file-list="false"
+                :on-success="(res) => $set(model, 'banner', res.url)"
+              >
+                <img v-if="model.banner" :src="model.banner" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </el-form-item>
+          </el-form>
+          <el-form :inline="true">
+            <el-form-item label="难度">
+              <el-rate
+                v-model="model.scores.difficult"
+                :max="9"
+                show-score
+                style="margin-top: 0.7rem"
+              ></el-rate>
+            </el-form-item>
+            <el-form-item label="技能">
+              <el-rate
+                v-model="model.scores.skills"
+                :max="9"
+                show-score
+                style="margin-top: 0.7rem"
+              ></el-rate>
+            </el-form-item>
+            <el-form-item label="攻击">
+              <el-rate
+                v-model="model.scores.attack"
+                :max="9"
+                show-score
+                style="margin-top: 0.7rem"
+              ></el-rate>
+            </el-form-item>
+            <el-form-item label="生存">
+              <el-rate
+                v-model="model.scores.survive"
+                :max="9"
+                show-score
+                style="margin-top: 0.7rem"
+              ></el-rate>
+            </el-form-item>
+          </el-form>
+          <el-form :inline="true">
+            <el-form-item label="顺风出装">
+              <!-- 添加multiple字段就能进行多选 -->
+              <el-select v-model="model.items1" multiple>
+                <el-option
+                  v-for="item of items"
+                  :key="item.id"
+                  :value="item._id"
+                  :label="item.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="逆风出装">
+              <!-- 添加multiple字段就能进行多选 -->
+              <el-select v-model="model.items2" multiple>
+                <el-option
+                  v-for="item of items"
+                  :key="item.id"
+                  :value="item._id"
+                  :label="item.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <el-form>
+            <el-form-item label="使用技巧">
+              <el-input type="textarea" v-model="model.usageTips"></el-input>
+            </el-form-item>
+            <el-form-item label="对抗技巧">
+              <el-input type="textarea" v-model="model.battleTips"></el-input>
+            </el-form-item>
+            <el-form-item label="团战思路">
+              <el-input type="textarea" v-model="model.teamTips"></el-input>
+            </el-form-item>
+          </el-form>
         </el-tab-pane>
         <el-tab-pane label="技能" name="skills">
           <!-- 添加新技能，给skills push一个新对象 -->
@@ -121,42 +131,51 @@
           </el-button>
           <el-row type="flex" style="flex-wrap: wrap">
             <el-col :md="12" v-for="(item, i) in model.skills" :key="i">
-              <el-form-item label="名称">
-                <el-input v-model="item.name"></el-input>
-              </el-form-item>
-              <el-form-item label="图标">
-                <el-upload
-                  class="avatar-uploader"
-                  :action="uploadUrl"
-                  :headers="getAuthHeaders()"
-                  :show-file-list="false"
-                  :on-success="(res) => $set(item, 'icon', res.url)"
-                >
-                  <!-- 如果有图片地址就显示图片，没有就显示上传图标 -->
-                  <img v-if="item.icon" :src="item.icon" class="avatar" />
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-              </el-form-item>
-              <el-form-item label="冷却值">
-                <el-input v-model="item.delay"></el-input>
-              </el-form-item>
-              <el-form-item label="消耗">
-                <el-input v-model="item.cost"></el-input>
-              </el-form-item>
-              <el-form-item label="描述">
-                <el-input type="textarea" v-model="item.description"></el-input>
-              </el-form-item>
-              <el-form-item label="小提示">
-                <el-input type="textarea" v-model="item.tips"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  size="small"
-                  type="danger"
-                  @click="model.skills.splice(i, 1)"
-                  >删除</el-button
-                >
-              </el-form-item>
+              <el-form label-position="left" label-width="60px">
+                <el-form-item label="名称">
+                  <el-input v-model="item.name"></el-input>
+                </el-form-item>
+                <el-form-item label="图标">
+                  <el-upload
+                    class="avatar-uploader"
+                    :action="uploadUrl"
+                    :headers="getAuthHeaders()"
+                    :show-file-list="false"
+                    :on-success="(res) => $set(item, 'icon', res.url)"
+                  >
+                    <!-- 如果有图片地址就显示图片，没有就显示上传图标 -->
+                    <img v-if="item.icon" :src="item.icon" class="avatar" />
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                  </el-upload>
+                </el-form-item>
+              </el-form>
+              <el-form :inline="true" label-position="left" label-width="60px">
+                <el-form-item label="冷却值">
+                  <el-input v-model="item.delay"></el-input>
+                </el-form-item>
+                <el-form-item label="消耗">
+                  <el-input v-model="item.cost"></el-input>
+                </el-form-item>
+              </el-form>
+              <el-form label-position="left" label-width="60px">
+                <el-form-item label="描述">
+                  <el-input
+                    type="textarea"
+                    v-model="item.description"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="小提示">
+                  <el-input type="textarea" v-model="item.tips"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="model.skills.splice(i, 1)"
+                    >删除</el-button
+                  >
+                </el-form-item>
+              </el-form>
             </el-col>
           </el-row>
         </el-tab-pane>
@@ -205,6 +224,9 @@
 </template>
 
 <style>
+.el-form-item {
+  padding-right: 1.5385rem;
+}
 </style>
 
 <script>
